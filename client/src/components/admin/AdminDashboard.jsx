@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import CategoryManagement from './CategoryManagement';
-import FinalApprovalQueue from './FinalApprovalQueue';
-import UserManagement from './UserManagement';
+import AssignFARequests from './AssignFARequests';
+import FinalizeRequests from './FinalizeRequests';
 
 const AdminDashboard = () => {
-  const [view, setView] = useState('approvals');
+  const [view, setView] = useState('assign');
 
   const getButtonClass = (tabName) => {
     return view === tabName
@@ -16,16 +15,18 @@ const AdminDashboard = () => {
     <div className="space-y-6">
       <div className="bg-white shadow-md rounded-lg p-4">
         <nav className="flex space-x-4">
-          <button onClick={() => setView('approvals')} className={getButtonClass('approvals')}>Final Approvals</button>
-          <button onClick={() => setView('users')} className={getButtonClass('users')}>User Management</button>
-          <button onClick={() => setView('categories')} className={getButtonClass('categories')}>Category Management</button>
+          <button onClick={() => setView('assign')} className={getButtonClass('assign')}>
+            Pending Assignment
+          </button>
+          <button onClick={() => setView('finalize')} className={getButtonClass('finalize')}>
+            Pending Final Approval
+          </button>
         </nav>
       </div>
       
       <div className="bg-white shadow-md rounded-lg p-6">
-        {view === 'approvals' && <FinalApprovalQueue />}
-        {view === 'users' && <UserManagement />}
-        {view === 'categories' && <CategoryManagement />}
+        {view === 'assign' && <AssignFARequests />}
+        {view === 'finalize' && <FinalizeRequests />}
       </div>
     </div>
   );

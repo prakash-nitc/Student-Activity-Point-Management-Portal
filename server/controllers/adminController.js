@@ -1,38 +1,50 @@
-// server/controllers/adminController.js
 const asyncHandler = require('express-async-handler');
 const Request = require('../models/requestModel');
 const User = require('../models/userModel');
-const Category = require('../models/categoryModel');
 
-// --- USER MANAGEMENT ---
+// @desc    Get all requests that have no assigned FA
+const getUnassignedRequests = asyncHandler(async (req, res) => {
+  const requests = await Request.find({ status: 'Pending Assignment' })
+    .populate('studentId', 'name email')
+    .sort({ createdAt: -1 });
+  res.json(requests);
+});
+
+// @desc    Assign an FA to a request
+const assignFaToRequest = asyncHandler(async (req, res) => {
+  const { faId } = req.body;
+  const request = await Request.findById(req.params.id);
+
+  if (request && faId) {
+    request.assignedFAId = faId;
+    request.status = 'Under Review'; // Update status so it appears on the FA's dashboard
+    const updatedRequest = await request.save();
+    res.json(updatedRequest);
+  } else {
+    res.status(404);
+    throw new Error('Request or Faculty Advisor not found');
+  }
+});
+
+// @desc    Get all users (used by admin to find FAs)
 const getAllUsers = asyncHandler(async (req, res) => {
-    const users = await User.find({}).select('-passwordHash');
+    const users = await User.find({}).select('-password');
     res.json(users);
 });
 
-const assignPrimaryFa = asyncHandler(async (req, res) => {
-    const { studentId, faId } = req.body;
-    const student = await User.findById(studentId);
-    if (student && student.role === 'student') {
-        student.primary_fa_id = faId || null;
-        await student.save();
-        res.json({ message: 'FA assigned successfully' });
-    } else {
-        res.status(404);
-        throw new Error('Student not found');
-    }
+// @desc Get requests pending final admin approval
+const getFinalApprovalQueue = asyncHandler(async (req, res) => {
+    const requests = await Request.find({ status: 'Pending Final Approval' })
+        .populate('studentId', 'name email')
+        .populate('assignedFAId', 'name')
+        .sort({ createdAt: -1 });
+    res.json(requests);
 });
 
-// --- CATEGORY MANAGEMENT ---
-const getAllCategories = asyncHandler(async (req, res) => {
-    const categories = await Category.find({}).populate('override_fa_id', 'name');
-    res.json(categories);
-});
 
-const createCategory = asyncHandler(async (req, res) => {
-    const { name, max_points, override_fa_id } = req.body;
-    const category = await Category.create({ name, max_points, override_fa_id });
-    res.status(201).json(category);
-});
-
-module.exports = { getAllUsers, assignPrimaryFa, getAllCategories, createCategory };
+module.exports = { 
+    getUnassignedRequests, 
+    assignFaToRequest, 
+    getAllUsers,
+    getFinalApprovalQueue 
+};
