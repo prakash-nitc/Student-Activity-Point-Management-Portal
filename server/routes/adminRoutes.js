@@ -1,22 +1,19 @@
-// server/routes/adminRoutes.js
 const express = require('express');
 const router = express.Router();
 const {
+  getUnassignedRequests,
+  assignFaToRequest,
   getAllUsers,
-  assignPrimaryFa,
-  getAllCategories,
-  createCategory,
+  getFinalApprovalQueue
 } = require('../controllers/adminController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
+// All routes in this file are protected and for admins only
 router.use(protect, authorize('admin'));
 
-// User routes
+router.get('/requests/unassigned', getUnassignedRequests);
+router.get('/requests/final-queue', getFinalApprovalQueue);
+router.put('/requests/:id/assign-fa', assignFaToRequest);
 router.get('/users', getAllUsers);
-router.put('/users/assign-fa', assignPrimaryFa);
-
-// Category routes
-router.get('/categories', getAllCategories);
-router.post('/categories', createCategory);
 
 module.exports = router;
