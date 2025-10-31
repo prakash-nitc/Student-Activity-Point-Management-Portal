@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Removed 'Link' import
 import { login } from '../../services/api';
 
 const Login = () => {
@@ -10,6 +10,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
       const { data } = await login({ email, password });
       localStorage.setItem('userInfo', JSON.stringify(data));
@@ -50,6 +51,9 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
+
+      {/* The "Forgot password?" link has been removed from here */}
+
       <div>
         <button
           type="submit"
