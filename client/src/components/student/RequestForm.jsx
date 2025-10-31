@@ -44,7 +44,7 @@ const RequestForm = ({ onNewRequest }) => {
 
     try {
       await createRequest(formData);
-      setMessage('Request submitted successfully! It is now pending admin assignment.');
+      setMessage('Request submitted successfully!');
       // Reset form fields
       setTitle('');
       setPoints('');
@@ -53,7 +53,8 @@ const RequestForm = ({ onNewRequest }) => {
       e.target.reset(); // Clear the file input visually
       onNewRequest(); // Refresh the list in the parent component
     } catch (error) {
-      setMessage('Submission failed. Please try again.');
+      // Display the specific error from the backend
+      setMessage(error.response?.data?.message || 'Submission failed. Please try again.');
       console.error(error);
     }
   };

@@ -1,17 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 const AuthPage = () => {
-  const [isLoginView, setIsLoginView] = useState(true);
+  const query = useQuery();
+  const [isLoginView, setIsLoginView] = useState(query.get('register') !== 'true');
 
   const handleRegisterSuccess = () => {
     alert('Registration successful! Please sign in.');
     setIsLoginView(true);
   };
 
+  const location = useLocation();
+  useEffect(() => {
+    setIsLoginView(query.get('register') !== 'true');
+  }, [location.search, query]);
+
+
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+    // Use the same centering and background as the landing page
+    <div className="min-h-screen flex items-center justify-center p-4">
+      {/* This is now a solid white card, which looks good on the gradient */}
       <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
         <div className="text-center mb-6">
           <h2 className="text-3xl font-extrabold text-gray-900">

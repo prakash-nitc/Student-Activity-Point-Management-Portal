@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getFinalApprovalQueue, updateRequestStatus } from '../../services/api';
+import { finalizeAdminApproval, getFinalApprovalQueue } from '../../services/api';
 
 const FinalizeRequests = () => {
     const [requests, setRequests] = useState([]);
@@ -19,13 +19,14 @@ const FinalizeRequests = () => {
 
     const handleAction = async (id, status) => {
         const comment = prompt('Add an optional comment for your final decision:');
+        if (comment === null) return; // User cancelled
+        
         try {
-            // This line has been corrected from 'updateRequest-status'
-            await updateRequestStatus(id, { status, comment }); 
+            await finalizeAdminApproval(id, { status, comment }); 
             alert('Final decision recorded!');
             fetchQueue();
         } catch (error) {
-            alert('Action failed. Please try again.');
+            alert(error.response?.data?.message || 'Action failed. Please try again.');
         }
     };
     
@@ -35,7 +36,7 @@ const FinalizeRequests = () => {
 
     return (
         <div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Requests Pending Final Approval</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Requests Pending Final Approval (F11)</h3>
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
@@ -51,9 +52,11 @@ const FinalizeRequests = () => {
                             <tr key={req._id}>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{req.studentId.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{req.title}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 italic">"{req.comments[req.comments.length - 1]?.text}"</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 italic">
+                                    "{req.comments[req.comments.length - 1]?.text || 'No comment'}"
+                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                    <button onClick={() => handleAction(req._id, 'Approved')} className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600">Approve</button>
+                                    <button onClick={() => handleAction(req._id, 'Admin Finalized')} className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600">Approve</button>
                                     <button onClick={() => handleAction(req._id, 'Rejected')} className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">Reject</button>
                                 </td>
                             </tr>

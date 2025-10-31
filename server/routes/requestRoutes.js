@@ -3,16 +3,16 @@ const router = express.Router();
 const {
   createRequest,
   getMyRequests,
-  updateRequestStatus,
+  finalizeAdminApproval
 } = require('../controllers/requestController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, authorize } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
-// Routes for students to create and view their own requests
-router.route('/').post(protect, upload.single('proof'), createRequest);
-router.route('/myrequests').get(protect, getMyRequests);
+// Student routes
+router.route('/').post(protect, authorize('student'), upload.single('proof'), createRequest);
+router.route('/myrequests').get(protect, authorize('student'), getMyRequests);
 
-// Route for admins/FAs to update a request's status
-router.route('/:id/status').put(protect, updateRequestStatus);
+// Admin final approval route (F11)
+router.route('/:id/status').put(protect, authorize('admin'), finalizeAdminApproval);
 
 module.exports = router;
