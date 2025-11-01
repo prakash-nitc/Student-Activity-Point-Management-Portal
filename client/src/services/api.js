@@ -13,7 +13,6 @@ API.interceptors.request.use((req) => {
 // === Auth Routes ===
 export const login = (formData) => API.post('/auth/login', formData);
 export const register = (formData) => API.post('/auth/register', formData);
-// (Add forgotPassword, resetPassword if you kept them)
 
 // === Student Routes ===
 export const createRequest = (requestData) => API.post('/requests', requestData, {
@@ -27,11 +26,11 @@ export const getRequestsForFA = () => API.get('/fa/requests');
 export const updateFAStatus = (id, { status, comment }) => API.put(`/fa/requests/${id}/status`, { status, comment });
 export const bulkApproveRequests = (requestIds) => API.post('/fa/requests/bulk-approve', { requestIds });
 
-// === Admin Routes (F3, F4, F11) ===
+// === Admin Routes (F4, F11) ===
 export const getFinalApprovalQueue = () => API.get('/admin/requests/final-queue');
 export const finalizeAdminApproval = (id, { status, comment }) => API.put(`/requests/${id}/status`, { status, comment });
-export const getAdminAllUsers = () => API.get('/admin/users');
-export const assignPrimaryFA = (studentId, faId) => API.put('/admin/users/assign-fa', { studentId, faId });
+export const getAdminAllUsers = () => API.get('/admin/users'); // Kept for Category Management
+// Removed assignPrimaryFA
 export const getAdminCategories = () => API.get('/admin/categories');
 export const createAdminCategory = (categoryData) => API.post('/admin/categories', categoryData);
 export const updateAdminCategoryFA = (categoryId, faId) => API.put(`/admin/categories/${categoryId}`, { faId });

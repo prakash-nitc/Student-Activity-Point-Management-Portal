@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Add this to the bottom of the file */
+/* This new body style creates the gradient background */
 body {
-  background: linear-gradient(to right, #6d28d9, #4f46e5);
+  background: linear-gradient(to right, #3f51b5, #673ab7);
 }
