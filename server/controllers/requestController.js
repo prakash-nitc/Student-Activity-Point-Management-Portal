@@ -12,47 +12,39 @@ const createRequest = asyncHandler(async (req, res) => {
     throw new Error('Proof file is required');
   }
 
-  // 1. Get the student document
   const student = await User.findById(req.user.id);
-
-  // 2. Find the category document
   const activityCategory = await Category.findOne({ name: category });
   if (!activityCategory) {
     res.status(400);
     throw new Error('Selected category does not exist.');
   }
 
-  // 3. Determine the correct FA (F5: Automatic Routing)
   let assignedFAId = null;
   if (activityCategory.override_fa_id) {
-    // A. Check for category-specific FA
     assignedFAId = activityCategory.override_fa_id;
   } else if (student.primary_fa_id) {
-    // B. Fallback to student's primary FA
     assignedFAId = student.primary_fa_id;
   }
 
-  // 4. If no FA can be assigned, fail the request
   if (!assignedFAId) {
     res.status(400);
-    throw new Error('This request cannot be submitted. No Faculty Advisor is assigned to your account or to this category. Please contact an admin.');
+    throw new Error('This request cannot be submitted. No Faculty Advisor is assigned. Please contact an admin.');
   }
 
-  // 5. Create the request
   const request = await Request.create({
     studentId: req.user.id,
     title,
     category,
-    points,
+    points: Number(points), // --- FIX: Ensure points are saved as a Number
     proof: req.file.path,
     assignedFAId: assignedFAId,
-    status: 'Submitted', // Default status
+    status: 'Submitted',
   });
 
   res.status(201).json(request);
 });
 
-// @desc    Get requests for the logged-in student
+// ... (getMyRequests and getRequestsForFA functions remain the same) ...
 const getMyRequests = asyncHandler(async (req, res) => {
   const requests = await Request.find({ studentId: req.user.id })
     .populate('assignedFAId', 'name')
@@ -60,11 +52,10 @@ const getMyRequests = asyncHandler(async (req, res) => {
   res.json(requests);
 });
 
-// @desc    Get pending requests for an FA (F6)
 const getRequestsForFA = asyncHandler(async (req, res) => {
   const requests = await Request.find({
     assignedFAId: req.user.id,
-    status: 'Submitted' // FA only sees new submissions
+    status: 'Submitted'
   })
     .populate('studentId', 'name email')
     .sort({ createdAt: -1 });
@@ -81,13 +72,11 @@ const updateFAStatus = asyncHandler(async (req, res) => {
     throw new Error('Request not found');
   }
   
-  // Security check: Is this FA assigned to this request?
   if (request.assignedFAId.toString() !== req.user.id.toString()) {
     res.status(401);
     throw new Error('Not authorized to update this request');
   }
   
-  // FAs can only set these specific statuses
   const allowedStatuses = ['FA Approved', 'Rejected', 'More Info Required'];
   if (!allowedStatuses.includes(status)) {
     res.status(400);
@@ -115,7 +104,7 @@ const bulkApproveRequests = asyncHandler(async (req, res) => {
     await Request.updateMany(
       { 
         _id: { $in: requestIds },
-        assignedFAId: req.user.id, // Security check
+        assignedFAId: req.user.id, 
         status: 'Submitted' 
       },
       { 
@@ -136,19 +125,16 @@ const finalizeAdminApproval = asyncHandler(async (req, res) => {
     throw new Error('Request not found');
   }
 
-  // Only admins can do this
   if (req.user.role !== 'admin') {
     res.status(401);
     throw new Error('Not authorized');
   }
   
-  // Admin can only finalize requests approved by an FA
   if (request.status !== 'FA Approved') {
     res.status(400);
-    throw new Error('Request must be approved by an FA first');
+    throw new Error('This request must be approved by an FA first.');
   }
 
-  // Admin final decision
   const allowedStatuses = ['Admin Finalized', 'Rejected'];
   if (!allowedStatuses.includes(status)) {
     res.status(400);
@@ -165,12 +151,26 @@ const finalizeAdminApproval = asyncHandler(async (req, res) => {
     });
   }
   
-  // F12: Update student points (this is where you would add logic)
   if (status === 'Admin Finalized') {
-    // E.g., find student, add request.points to their total
-    // const student = await User.findById(request.studentId);
-    // student.totalPoints += request.points;
-    // await student.save();
+    const student = await User.findById(request.studentId);
+    if (student) {
+        
+        if (!student.pointsData) {
+            student.pointsData = [];
+        }
+
+        const categoryIndex = student.pointsData.findIndex(
+            p => p.category === request.category
+        );
+
+        if (categoryIndex > -1) {
+             // --- FIX: Ensure points are added as a Number
+            student.pointsData[categoryIndex].points += Number(request.points);
+        } else {
+            student.pointsData.push({ category: request.category, points: Number(request.points) });
+        }
+        await student.save();
+    }
   }
 
   const updatedRequest = await request.save();
