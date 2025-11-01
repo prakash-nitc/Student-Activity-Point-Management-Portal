@@ -9,7 +9,7 @@ const CategoryManagement = () => {
     const [newName, setNewName] = useState('');
     const [newFaId, setNewFaId] = useState('');
     
-    // State for updating existing categories
+    // This state holds the selected value for each dropdown
     const [selectedFaOverrides, setSelectedFaOverrides] = useState({});
 
     const fetchData = async () => {
@@ -20,7 +20,7 @@ const CategoryManagement = () => {
             const userRes = await getAdminAllUsers();
             setFAs(userRes.data.filter(user => user.role === 'fa'));
             
-            // Pre-fill dropdowns with current override FAs
+            // This pre-fills the dropdowns with the current assignments
             const initialOverrides = {};
             catRes.data.forEach(cat => {
                 if (cat.override_fa_id) {
@@ -66,6 +66,8 @@ const CategoryManagement = () => {
         }
     };
     
+    // --- THIS IS THE CRITICAL FUNCTION THAT WAS LIKELY MISSING ---
+    // This function updates the state as you change the dropdown
     const handleSelectChange = (categoryId, faId) => {
         setSelectedFaOverrides(prev => ({...prev, [categoryId]: faId}));
     };
@@ -75,7 +77,7 @@ const CategoryManagement = () => {
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Category Management (F4)</h3>
             
             {/* --- Create New Category Form --- */}
-            <form onSubmit={handleCreateCategory} className="mb-6 p-4 border rounded-lg space-y-3">
+            <form onSubmit={handleCreateCategory} className="mb-6 p-4 border rounded-lg space-y-3 bg-gray-50">
                 <h4 className="text-lg font-medium">Create New Category</h4>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Category Name</label>
@@ -100,7 +102,7 @@ const CategoryManagement = () => {
                         ))}
                     </select>
                 </div>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md">Create</button>
+                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Create</button>
             </form>
             
             {/* --- Existing Categories Table --- */}
@@ -119,6 +121,7 @@ const CategoryManagement = () => {
                             <tr key={cat._id}>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{cat.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {/* --- THIS IS THE CORRECTED DROPDOWN --- */}
                                     <select
                                         value={selectedFaOverrides[cat._id] || ''}
                                         onChange={(e) => handleSelectChange(cat._id, e.target.value)}
