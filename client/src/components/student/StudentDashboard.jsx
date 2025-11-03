@@ -145,7 +145,8 @@ const StudentDashboard = () => {
     .filter(r => r.status === 'Admin Finalized' || r.status === 'Approved')
     .reduce((acc, r) => acc + Number(r.points || 0), 0);
 
-  const totalApprovedPoints = hasProfileTotals ? totalFromProfile : totalFromRequests;
+  // Use the greater of the two to avoid dropping historical points
+  const totalApprovedPoints = Math.max(totalFromRequests, totalFromProfile);
 
   // This is the fixed pending count
   const pendingCount = requests.filter(
