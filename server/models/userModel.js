@@ -21,6 +21,13 @@ const userSchema = new mongoose.Schema({
     enum: ['student', 'fa', 'admin'],
     default: 'student',
   },
+  // Aggregated points per category, populated when Admin finalizes requests
+  pointsData: [
+    new mongoose.Schema({
+      category: { type: String, required: true },
+      points: { type: Number, required: true, default: 0 }
+    }, { _id: false })
+  ],
   // ADDED: To store the student's primary FA (F3)
   primary_fa_id: {
     type: mongoose.Schema.Types.ObjectId,
