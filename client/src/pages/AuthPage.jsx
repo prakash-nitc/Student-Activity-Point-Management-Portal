@@ -1,140 +1,19 @@
-// import React, { useState } from 'react';
-// import { useNavigate, Link } from 'react-router-dom';
-// import { login } from '../services/api'; // <-- THIS LINE IS FIXED
-
-// // Helper component for the form inputs
-// const FormInput = ({ id, label, type, value, onChange }) => (
-//   <div>
-//     <label htmlFor={id} className="text-sm font-medium text-gray-400">
-//       {label}
-//     </label>
-//     <div className="mt-1 relative">
-//       <input
-//         id={id}
-//         name={id}
-//         type={type}
-//         required
-//         value={value}
-//         onChange={onChange}
-//         className="block w-full bg-transparent border-0 border-b-2 border-gray-500 text-white shadow-sm focus:border-white focus:ring-0 sm:text-sm"
-//       />
-//       {type === 'password' && (
-//         <span className="absolute inset-y-0 right-0 flex items-center pr-3">
-//           {/* Eye icon - you can add an icon library later */}
-//         </span>
-//       )}
-//     </div>
-//   </div>
-// );
-
-// const AuthPage = () => {
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [error, setError] = useState('');
-//   const navigate = useNavigate();
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setError('');
-//     try {
-//       const { data } = await login({ email, password });
-//       localStorage.setItem('userInfo', JSON.stringify(data));
-//       navigate('/dashboard');
-//     } catch (err) {
-//       setError(err.response?.data?.message || 'Login failed. Please try again.');
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen flex">
-//       {/* Left Column (Login Form) */}
-//       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-blue-900 text-white">
-//         <div className="mx-auto w-full max-w-sm lg:w-96">
-//           <div className="mb-8">
-//             <h2 className="text-3xl font-extrabold text-white">Login</h2>
-//             <p className="mt-2 text-sm text-gray-300">User Authentication</p>
-//           </div>
-
-//           <form onSubmit={handleSubmit} className="space-y-6">
-//             {error && <p className="text-red-400 text-sm">{error}</p>}
-//             <FormInput
-//               id="email"
-//               label="Email"
-//               type="email"
-//               value={email}
-//               onChange={(e) => setEmail(e.target.value)}
-//             />
-//             <FormInput
-//               id="password"
-//               label="Password"
-//               type="password"
-//               value={password}
-//               onChange={(e) => setPassword(e.target.value)}
-//             />
-//             <button
-//               type="submit"
-//               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-900 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-100"
-//             >
-//               Login
-//             </button>
-//           </form>
-
-//           <div className="mt-8 flex items-center justify-between">
-//             <Link
-//               to="/register"
-//               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-900 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-100"
-//             >
-//               Sign Up
-//             </Link>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Right Column (Welcome) */}
-//       <div className="hidden lg:flex flex-1 items-center justify-center bg-blue-800 p-8">
-//         <div className="text-white text-left max-w-md">
-//           <h1 className="text-5xl font-bold">Welcome to NITC Student Portal</h1>
-//           <p className="mt-4 text-xl text-gray-300">NITC is People</p>
-//           <div className="mt-10">
-//             {/* Placeholder for images */}
-//             <div className="flex -space-x-8">
-//               <div className="w-48 h-48 rounded-full bg-gray-500 flex items-center justify-center text-gray-800 shadow-lg border-4 border-blue-800">Student 1</div>
-//               <div className="w-48 h-48 rounded-full bg-gray-400 flex items-center justify-center text-gray-800 shadow-lg translate-y-8 border-4 border-blue-800">Student 2</div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AuthPage;
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../services/api';
 
-// Helper component for the form inputs
 const FormInput = ({ id, label, type, value, onChange }) => (
   <div>
-    <label htmlFor={id} className="text-sm font-medium text-gray-400">
-      {label}
-    </label>
-    <div className="mt-1 relative">
-      <input
-        id={id}
-        name={id}
-        type={type}
-        required
-        value={value}
-        onChange={onChange}
-        className="block w-full bg-transparent border-0 border-b-2 border-gray-500 text-white shadow-sm focus:border-white focus:ring-0 sm:text-sm"
-      />
-      {type === 'password' && (
-        <span className="absolute inset-y-0 right-0 flex items-center pr-3">
-          {/* Eye icon - you can add an icon library later */}
-        </span>
-      )}
-    </div>
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700">{label}</label>
+    <input
+      id={id}
+      name={id}
+      type={type}
+      required
+      value={value}
+      onChange={onChange}
+      className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+    />
   </div>
 );
 
@@ -157,78 +36,74 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Column (Login Form) */}
-      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-blue-900 text-white">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="mb-8">
-            <h2 className="text-3xl font-extrabold text-white">Login</h2>
-            <p className="mt-2 text-sm text-gray-300">User Authentication</p>
-          </div>
+    <div className="relative min-h-screen grid lg:grid-cols-2 bg-gradient-to-br from-[#0d1b2a] via-[#102a43] to-[#1b3a57]">
+      {/* animated aurora background */}
+      <div className="aurora-bg opacity-70" />
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && <p className="text-red-400 text-sm">{error}</p>}
-            <FormInput
-              id="email"
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <FormInput
-              id="password"
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-900 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-100"
-            >
-              Login
-            </button>
-          </form>
+      {/* Left: Auth Card */}
+      <div className="flex items-center justify-center p-6 sm:p-10">
+        <div className="w-full max-w-md">
+          <div className="bg-white/90 backdrop-blur rounded-2xl shadow-xl border border-white/60 p-8 fade-in-up">
+            <div className="mb-6 text-center">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM7 9h10v2H7V9zm0 4h7v2H7v-2z"/></svg>
+              </div>
+              <h2 className="mt-3 text-2xl font-bold text-gray-900">Welcome Back</h2>
+              <p className="text-sm text-gray-500">Sign in to continue</p>
+            </div>
 
-          <div className="mt-8 flex items-center justify-between">
-            <p className="text-sm text-gray-300">Create account?</p>
-            <Link
-              to="/register"
-              className="font-medium text-white border border-white rounded-md px-4 py-2 text-sm hover:bg-white hover:text-blue-900 transition-colors"
-            >
-              Sign Up
-            </Link>
+            {error && (
+              <div className="mb-4 rounded-lg bg-rose-50 text-rose-700 text-sm px-3 py-2 border border-rose-200">{error}</div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <FormInput id="email" label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <FormInput id="password" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <button
+                type="submit"
+                className="w-full inline-flex justify-center items-center rounded-lg px-4 py-2.5 text-white font-semibold shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Sign In
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-gray-600">
+              <span>Don’t have an account? </span>
+              <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-700">Create one</Link>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Right Column (Welcome) */}
-      <div className="hidden lg:flex flex-1 items-center justify-center bg-blue-800 p-8">
-        <div className="text-white text-left max-w-md">
-          <h1 className="text-5xl font-italic text-white font-bebas">NITC Student Activity Point Management Portal</h1>
-          <p className="mt-4 text-xl text-gray-300">Turning Participation into Progress.</p>
-          
-          {/* --- THIS IS THE MODIFIED PART --- */}
-          <div className="mt-10">
-            <div className="flex -space-x-8">
-              <img
-                className="w-52 h-52 rounded-full object-cover shadow-lg border-4 border-blue-800"
-                src="/images/student1.png"
-                alt="Student 1"
-              />
-              <img
-                className="w-53 h-53 rounded-full object-cover shadow-lg translate-y-8 border-4 border-blue-800"
-                src="/images/student2.png"
-                alt="Student 2"
-              />
-            </div>
-          </div>
-          {/* ---------------------------------- */}
+      {/* Right: Hero visuals with animated orbits and images */}
+      <div className="relative hidden lg:flex items-center justify-center overflow-hidden">
+        {/* floating color blobs */}
+        <div className="absolute -top-28 -left-20 h-72 w-72 bg-indigo-500/20 blur-3xl animate-blob" />
+        <div className="absolute top-1/2 -translate-y-1/2 -right-20 h-80 w-80 bg-sky-400/20 blur-3xl animate-blob" />
 
+        <div className="relative z-10 max-w-xl p-10 text-white">
+          <h1 className="text-5xl font-extrabold leading-tight drop-shadow-md fade-in-up">
+            NITC Student Activity Point
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-sky-300 to-fuchsia-300">
+              Management Portal
+            </span>
+          </h1>
+          <p className="mt-4 text-indigo-100/90 text-lg fade-in-up" style={{animationDelay:'120ms'}}>
+            Turning participation into progress. Submit activities, track approvals,
+            and grow your portfolio.
+          </p>
+
+        <div className="mt-10 relative h-64 w-full">
+          {/* Orbiting photos */}
+          <img src="/images/student2.png" alt="Students collaborating" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-44 w-44 rounded-full object-cover shadow-xl glow-ring animate-float-slow" />
+          <img src="/images/student1.png" alt="Campus life" className="absolute left-6 top-3 h-24 w-24 rounded-full object-cover shadow-lg glow-ring animate-float-reverse" />
+          <div className="absolute right-10 bottom-6 h-24 w-24 rounded-full bg-white/10 border border-white/30 backdrop-blur glow-ring animate-float-x" />
+        </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default AuthPage;
+export default AuthPage;
+
