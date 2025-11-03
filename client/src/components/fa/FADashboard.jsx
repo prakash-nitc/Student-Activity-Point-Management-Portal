@@ -127,12 +127,13 @@ const FADashboard = () => {
     fetchPendingRequests();
   }, []);
 
-  const handleAction = async (id, status) => {
-    let comment = '';
-    if (status === 'Rejected' || status === 'More Info Required') {
-      // use backticks for interpolation
-      comment = prompt(`Please provide a reason for status: ${status}`);
-      if (comment === null) return; // user cancelled prompt
+  const handleAction = async (id, status, commentInput = '') => {
+    let comment = commentInput ?? '';
+    // Require a comment for negative/clarification actions if none provided
+    if ((status === 'Rejected' || status === 'More Info Required') && !comment) {
+      const prompted = prompt(`Please provide a reason for status: ${status}`);
+      if (prompted === null || prompted.trim() === '') return; // cancelled or empty
+      comment = prompted.trim();
     }
 
     try {
@@ -175,6 +176,8 @@ const FADashboard = () => {
     const studentName = request.studentId?.name ?? 'Unknown';
     const studentEmail = request.studentId?.email ?? 'No email';
 
+    const [comment, setComment] = useState('');
+
     return (
       // Modal backdrop
       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -208,21 +211,35 @@ const FADashboard = () => {
             )}
           </div>
 
+          {/* Comment box */}
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Comment (optional for Approve)
+            </label>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              rows={3}
+              className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Add any note for the student or record..."
+            />
+          </div>
+
           <div className="mt-6 pt-4 border-t flex justify-end space-x-3">
             <button
-              onClick={() => handleAction(request._id, 'More Info Required')}
+              onClick={() => handleAction(request._id, 'More Info Required', comment)}
               className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
             >
               Request Info
             </button>
             <button
-              onClick={() => handleAction(request._id, 'Rejected')}
+              onClick={() => handleAction(request._id, 'Rejected', comment)}
               className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
             >
               Reject
             </button>
             <button
-              onClick={() => handleAction(request._id, 'FA Approved')}
+              onClick={() => handleAction(request._id, 'FA Approved', comment)}
               className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
             >
               Approve
