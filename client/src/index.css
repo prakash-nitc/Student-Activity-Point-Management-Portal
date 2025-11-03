@@ -46,6 +46,30 @@
 .animate-gradient { background-size: 200% 200%; animation: gradientShift 8s ease infinite; }
 .twinkle { position: absolute; border-radius: 9999px; background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,255,255,0)); animation: twinkle 3.5s ease-in-out infinite; filter: blur(0.2px); }
 
+/* Hand-drawn doodle animations */
+@keyframes dashDraw {
+  0% { stroke-dashoffset: 620; opacity: 0; }
+  20% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+@keyframes wiggleSlow {
+  0%, 100% { transform: rotate(-1deg) translateY(0); }
+  50% { transform: rotate(1deg) translateY(-2px); }
+}
+
+.doodle-line {
+  stroke: rgba(255,255,255,0.35);
+  stroke-width: 2.2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 620;
+  stroke-dashoffset: 620;
+  animation: dashDraw 2.8s ease forwards;
+}
+.doodle-wiggle { animation: wiggleSlow 6.5s ease-in-out infinite; }
+
 .glow-ring {
   box-shadow: 0 10px 30px rgba(79, 70, 229, 0.25), 0 6px 16px rgba(14, 165, 233, 0.18);
 }
