@@ -1,167 +1,19 @@
-// import React, { useState } from 'react';
-// import { useNavigate, Link } from 'react-router-dom';
-// import { register } from '../services/api'; // <-- THIS LINE IS FIXED
-
-// // Helper component for the form inputs
-// const FormInput = ({ id, label, type, value, onChange }) => (
-//   <div>
-//     <label htmlFor={id} className="text-sm font-medium text-gray-400">
-//       {label}
-//     </label>
-//     <div className="mt-1 relative">
-//       <input
-//         id={id}
-//         name={id}
-//         type={type}
-//         required
-//         value={value}
-//         onChange={onChange}
-//         className="block w-full bg-transparent border-0 border-b-2 border-gray-500 text-white shadow-sm focus:border-white focus:ring-0 sm:text-sm"
-//       />
-//     </div>
-//   </div>
-// );
-
-// const RegisterPage = () => {
-//   const [name, setName] = useState('');
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [role, setRole] = useState('student');
-//   const [error, setError] = useState('');
-//   const navigate = useNavigate();
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setError('');
-//     if (!email.endsWith('@nitc.ac.in')) {
-//       setError('Registration is only allowed with @nitc.ac.in emails.');
-//       return;
-//     }
-//     try {
-//       await register({ name, email, password, role });
-//       alert('Registration successful! Please log in.');
-//       navigate('/auth');
-//     } catch (err) {
-//       setError(err.response?.data?.message || 'Registration failed. Please try again.');
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen flex">
-//       {/* Left Column (Register Form) */}
-//       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-blue-900 text-white">
-//         <div className="mx-auto w-full max-w-sm lg:w-96">
-//           <div className="mb-8">
-//             <h2 className="text-3xl font-extrabold text-white">Create Account</h2>
-//             <p className="mt-2 text-sm text-gray-300">Join the portal</p>
-//           </div>
-
-//           <form onSubmit={handleSubmit} className="space-y-6">
-//             {error && <p className="text-red-400 text-sm">{error}</p>}
-//             <FormInput
-//               id="name"
-//               label="Full Name"
-//               type="text"
-//               value={name}
-//               onChange={(e) => setName(e.target.value)}
-//             />
-//             <FormInput
-//               id="email"
-//               label="Email (@nitc.ac.in)"
-//               type="email"
-//               value={email}
-//               onChange={(e) => setEmail(e.target.value)}
-//             />
-//             <FormInput
-//               id="password"
-//               label="Password"
-//               type="password"
-//               value={password}
-//               onChange={(e) => setPassword(e.target.value)}
-//             />
-//              <div>
-//               <label htmlFor="role" className="text-sm font-medium text-gray-400">
-//                 Register as
-//               </label>
-//               <select
-//                 id="role"
-//                 name="role"
-//                 className="mt-1 block w-full bg-blue-900 border-0 border-b-2 border-gray-500 text-white focus:border-white focus:ring-0"
-//                 value={role}
-//                 onChange={(e) => setRole(e.target.value)}
-//               >
-//                 <option value="student">Student</option>
-//                 <option value="fa">Faculty Advisor</option>
-//                 <option value="admin">Admin</option>
-//               </select>
-//             </div>
-//             <button
-//               type="submit"
-//               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-900 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-100"
-//             >
-//               Sign Up
-//             </button>
-//           </form>
-
-//           <div className="mt-8 flex items-center justify-between">
-//             <p className="text-sm text-gray-300">Already have an account?</p>
-//             <Link
-//               to="/auth"
-//               className="font-medium text-white border border-white rounded-md px-4 py-2 text-sm hover:bg-white hover:text-blue-900 transition-colors"
-//             >
-//               Sign In
-//             </Link>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Right Column (Welcome) */}
-// <div className="hidden lg:flex flex-1 items-center justify-center bg-blue-800 p-8">
-//   <div className="text-white text-left max-w-md">
-//     <h1 className="text-5xl font-bold">Welcome to NITC Student Portal</h1>
-//     <p className="mt-4 text-xl text-gray-300">NITC is People</p>
-//     <div className="mt-10">
-//       {/* Images of students */}
-//       <div className="flex -space-x-8">
-//         <img 
-//           src="/student1.png"  {/* <-- CHANGED HERE */}
-//           alt="Student 1" 
-//           className="w-48 h-48 rounded-full object-cover shadow-lg border-4 border-blue-800" 
-//         />
-//         <img 
-//           src="/student2.png"  {/* <-- CHANGED HERE */}
-//           alt="Student 2" 
-//           className="w-48 h-48 rounded-full object-cover shadow-lg translate-y-8 border-4 border-blue-800" 
-//         />
-//       </div>
-//     </div>
-//   </div>
-// </div>
-//   );
-// };
-
-// export default RegisterPage;
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../services/api';
 
-// Helper component for the form inputs
 const FormInput = ({ id, label, type, value, onChange }) => (
   <div>
-    <label htmlFor={id} className="text-sm font-medium text-gray-400">
-      {label}
-    </label>
-    <div className="mt-1 relative">
-      <input
-        id={id}
-        name={id}
-        type={type}
-        required
-        value={value}
-        onChange={onChange}
-        className="block w-full bg-transparent border-0 border-b-2 border-gray-500 text-white shadow-sm focus:border-white focus:ring-0 sm:text-sm"
-      />
-    </div>
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700">{label}</label>
+    <input
+      id={id}
+      name={id}
+      type={type}
+      required
+      value={value}
+      onChange={onChange}
+      className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+    />
   </div>
 );
 
@@ -172,12 +24,19 @@ const RegisterPage = () => {
   const [role, setRole] = useState('student');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const emailLower = email.toLowerCase();
+  const isNITCDomain = emailLower.endsWith('@nitc.ac.in');
+  const isStudentEmail = /[._-][bm]\d/.test(emailLower.split('@')[0] || '');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (!email.endsWith('@nitc.ac.in')) {
+    if (!isNITCDomain) {
       setError('Registration is only allowed with @nitc.ac.in emails.');
+      return;
+    }
+    if (isStudentEmail && role !== 'student') {
+      setError('Student emails can only register as Student.');
       return;
     }
     try {
@@ -189,102 +48,115 @@ const RegisterPage = () => {
     }
   };
 
+  // simple parallax for hero visuals
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
   return (
-    <div className="min-h-screen flex">
-      {/* Left Column (Register Form) */}
-      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-blue-900 text-white">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="mb-8">
-            <h2 className="text-3xl font-extrabold text-white">Create Account</h2>
-            <p className="mt-2 text-sm text-gray-300">Join the portal</p>
-          </div>
+    <div className="relative min-h-screen grid lg:grid-cols-2 bg-gradient-to-br from-[#0d1b2a] via-[#102a43] to-[#1b3a57]">
+      {/* background aurora */}
+      <div className="aurora-bg opacity-70" />
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && <p className="text-red-400 text-sm">{error}</p>}
-            <FormInput
-              id="name"
-              label="Full Name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <FormInput
-              id="email"
-              label="Email (@nitc.ac.in)"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <FormInput
-              id="password"
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-             <div>
-              <label htmlFor="role" className="text-sm font-medium text-gray-400">
-                Register as
-              </label>
-              <select
-                id="role"
-                name="role"
-                className="mt-1 block w-full bg-blue-900 border-0 border-b-2 border-gray-500 text-white focus:border-white focus:ring-0"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value="student">Student</option>
-                <option value="fa">Faculty Advisor</option>
-                <option value="admin">Admin</option>
-              </select>
+      {/* Left: Register Card */}
+      <div className="flex items-center justify-center p-6 sm:p-10">
+        <div className="w-full max-w-md">
+          <div className="bg-white/90 backdrop-blur rounded-2xl shadow-xl border border-white/60 p-8 fade-in-up">
+            <div className="mb-6 text-center">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM7 9h10v2H7V9zm0 4h10v2H7v-2z"/></svg>
+              </div>
+              <h2 className="mt-3 text-2xl font-bold text-gray-900">Create Account</h2>
+              <p className="text-sm text-gray-500">Join the portal</p>
             </div>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-900 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-100"
-            >
-              Sign Up
-            </button>
-          </form>
 
-          <div className="mt-8 flex items-center justify-between">
-            <p className="text-sm text-gray-300">Already have an account?</p>
-            <Link
-              to="/auth"
-              className="font-medium text-white border border-white rounded-md px-4 py-2 text-sm hover:bg-white hover:text-blue-900 transition-colors"
-            >
-              Sign In
-            </Link>
+            {error && (
+              <div className="mb-4 rounded-lg bg-rose-50 text-rose-700 text-sm px-3 py-2 border border-rose-200">{error}</div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <FormInput id="name" label="Full Name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+              <FormInput id="email" label="Email (@nitc.ac.in)" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <p className={`text-xs ${isNITCDomain ? 'text-emerald-600' : 'text-gray-500'} mt-1`}>
+                {isStudentEmail ? 'Detected student email pattern (b/m + roll). Role will be Student.' : 'Enter your official @nitc.ac.in email.'}
+              </p>
+              <FormInput id="password" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <div>
+                <label htmlFor="role" className="block text-sm font-medium text-gray-700">Register as</label>
+                <select
+                  id="role"
+                  name="role"
+                  className={`mt-1 block w-full rounded-lg border ${isStudentEmail ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'} px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500`}
+                  value={isStudentEmail ? 'student' : role}
+                  onChange={(e) => setRole(e.target.value)}
+                  disabled={isStudentEmail}
+                >
+                  <option value="student">Student</option>
+                  <option value="fa">Faculty Advisor</option>
+                  <option value="admin">Admin</option>
+                </select>
+                {isStudentEmail && (
+                  <p className="text-xs text-gray-500 mt-1">Role is locked to Student based on email.</p>
+                )}
+              </div>
+              <button
+                type="submit"
+                className="w-full inline-flex justify-center items-center rounded-lg px-4 py-2.5 text-white font-semibold shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Sign Up
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-gray-600">
+              <span>Already have an account? </span>
+              <Link to="/auth" className="font-semibold text-indigo-600 hover:text-indigo-700">Sign In</Link>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Right Column (Welcome) */}
-      <div className="hidden lg:flex flex-1 items-center justify-center bg-blue-800 p-8">
-        <div className="text-white text-left max-w-md">
-          <h1 className="text-5xl font-italic text-white font-bebas">NITC Student Activity Point Management Portal</h1>
-          <p className="mt-4 text-xl text-gray-300">Turning Participation into Progress.</p>
-          
-          {/* --- THIS IS THE MODIFIED PART --- */}
-          <div className="mt-10">
-            <div className="flex -space-x-8">
-              <img
-                className="w-52 h-52 rounded-full object-cover shadow-lg border-4 border-blue-800"
-                src="/images/student1.png"
-                alt="Student 1"
-              />
-              <img
-                className="w-53 h-53 rounded-full object-cover shadow-lg translate-y-8 border-4 border-blue-800"
-                src="/images/student2.png"
-                alt="Student 2"
-              />
-            </div>
+      {/* Right: Animated collage with improved sizes */}
+      <div className="relative hidden lg:flex items-center justify-center overflow-hidden"
+           onMouseMove={(e) => {
+             const rect = e.currentTarget.getBoundingClientRect();
+             const x = (e.clientX - (rect.left + rect.width / 2)) / rect.width;
+             const y = (e.clientY - (rect.top + rect.height / 2)) / rect.height;
+             setTilt({ x, y });
+           }}
+           onMouseLeave={() => setTilt({ x: 0, y: 0 })}>
+        {/* animated blobs */}
+        <div className="absolute -top-24 -left-24 h-72 w-72 bg-emerald-400/20 blur-3xl animate-blob" />
+        <div className="absolute bottom-0 right-0 h-80 w-80 bg-fuchsia-400/20 blur-3xl animate-blob" />
+
+        <div className="relative z-10 max-w-xl p-10 text-white">
+          <h1 className="text-5xl font-extrabold leading-tight drop-shadow-md fade-in-up">
+            Welcome to
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-sky-300 to-fuchsia-300 animate-gradient">
+              NITC Activity Points
+            </span>
+          </h1>
+          <p className="mt-4 text-indigo-100/90 text-lg fade-in-up" style={{animationDelay:'120ms'}}>
+            Showcase achievements and grow your portfolio.
+          </p>
+
+          <div className="mt-10 relative h-80 w-full">
+            {/* Large hero image */}
+            <img src="/images/student2.png" alt="Teamwork" className="absolute left-1/2 top-1/2 rounded-full object-cover shadow-2xl glow-ring animate-float-slow"
+                 style={{ height: '16rem', width: '16rem', transform: `translate(-50%, -50%) translateX(${tilt.x * 16}px) translateY(${tilt.y * 16}px)` }} />
+            {/* Medium satellite */}
+            <img src="/images/student1.png" alt="Workshop" className="absolute left-6 top-0 rounded-full object-cover shadow-xl glow-ring animate-float-reverse"
+                 style={{ height: '9.5rem', width: '9.5rem', transform: `translateX(${tilt.x * -10}px) translateY(${tilt.y * -8}px)` }} />
+            {/* Soft glass bead */}
+            <div className="absolute right-10 bottom-4 rounded-full bg-white/10 border border-white/30 backdrop-blur glow-ring animate-float-x"
+                 style={{ height: '8rem', width: '8rem', transform: `translateX(${tilt.x * 12}px) translateY(${tilt.y * 10}px)` }} />
+
+            {/* twinkle particles */}
+            <span className="twinkle" style={{ top: '12%', left: '20%', width: 4, height: 4, animationDelay: '0.7s' }} />
+            <span className="twinkle" style={{ top: '22%', right: '10%', width: 3, height: 3, animationDelay: '1.4s' }} />
+            <span className="twinkle" style={{ bottom: '8%', left: '30%', width: 3, height: 3, animationDelay: '2.1s' }} />
           </div>
-          {/* ---------------------------------- */}
-          
         </div>
       </div>
     </div>
   );
 };
 
-export default RegisterPage;
+export default RegisterPage;

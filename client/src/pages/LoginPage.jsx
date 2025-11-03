@@ -25,13 +25,24 @@ const Login = () => {
     }
   };
 
+  // simple parallax for hero visuals
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const handleMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - (rect.left + rect.width / 2)) / rect.width;
+    const y = (e.clientY - (rect.top + rect.height / 2)) / rect.height;
+    setTilt({ x, y });
+  };
+
   return (
     <div className="relative min-h-screen grid lg:grid-cols-2 bg-gradient-to-br from-[#0d1b2a] via-[#102a43] to-[#1b3a57]">
       {/* Background aurora and blobs */}
       <div className="aurora-bg opacity-70" />
 
       {/* Left: Hero with animated orbits */}
-      <div className="relative hidden lg:flex items-center justify-center overflow-hidden">
+      <div className="relative hidden lg:flex items-center justify-center overflow-hidden"
+           onMouseMove={handleMove}
+           onMouseLeave={() => setTilt({ x: 0, y: 0 })}>
         {/* Soft color blobs */}
         <div className="absolute -top-28 -left-20 h-72 w-72 bg-indigo-500/20 blur-3xl animate-blob" />
         <div className="absolute top-1/2 -translate-y-1/2 -right-20 h-80 w-80 bg-sky-400/20 blur-3xl animate-blob" />
@@ -39,7 +50,7 @@ const Login = () => {
         <div className="relative z-10 max-w-xl p-10 text-white">
           <h1 className="text-5xl font-extrabold leading-tight drop-shadow-md fade-in-up">
             NITC Student Activity Point
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-sky-300 to-fuchsia-300">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-sky-300 to-fuchsia-300 animate-gradient">
               Management Portal
             </span>
           </h1>
@@ -56,10 +67,21 @@ const Login = () => {
           </ul>
 
           {/* Animated orbit visuals */}
-          <div className="mt-10 relative h-64 w-full">
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-44 w-44 rounded-full bg-gradient-to-br from-indigo-400 to-fuchsia-400 glow-ring animate-float-slow" />
-            <div className="absolute left-6 top-3 h-20 w-20 rounded-full bg-white/10 border border-white/30 backdrop-blur glow-ring animate-float-reverse" />
-            <div className="absolute right-10 bottom-6 h-24 w-24 rounded-full bg-white/10 border border-white/30 backdrop-blur glow-ring animate-float-x" />
+          <div className="mt-10 relative h-72 w-full">
+            <div className="absolute left-1/2 top-1/2 rounded-full bg-gradient-to-br from-indigo-400 to-fuchsia-400 glow-ring animate-float-slow"
+                 style={{
+                   height: '14rem', width: '14rem',
+                   transform: `translate(-50%, -50%) translateX(${tilt.x * 14}px) translateY(${tilt.y * 14}px)`
+                 }} />
+            <div className="absolute left-6 top-3 rounded-full bg-white/10 border border-white/30 backdrop-blur glow-ring animate-float-reverse"
+                 style={{ height: '6rem', width: '6rem', transform: `translateX(${tilt.x * -8}px) translateY(${tilt.y * -8}px)` }} />
+            <div className="absolute right-10 bottom-6 rounded-full bg-white/10 border border-white/30 backdrop-blur glow-ring animate-float-x"
+                 style={{ height: '7rem', width: '7rem', transform: `translateX(${tilt.x * 10}px) translateY(${tilt.y * 10}px)` }} />
+
+            {/* twinkle particles */}
+            <span className="twinkle" style={{ top: '10%', left: '12%', width: 3, height: 3, animationDelay: '0.4s' }} />
+            <span className="twinkle" style={{ top: '18%', right: '15%', width: 4, height: 4, animationDelay: '1.2s' }} />
+            <span className="twinkle" style={{ bottom: '14%', left: '22%', width: 3, height: 3, animationDelay: '2.0s' }} />
           </div>
         </div>
       </div>

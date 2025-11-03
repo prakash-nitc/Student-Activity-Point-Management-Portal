@@ -27,11 +27,24 @@
   100% { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.9); }
+  50% { opacity: 0.9; transform: scale(1.05); }
+}
+
 .animate-float-slow { animation: floatY 8s ease-in-out infinite; }
 .animate-float-x { animation: floatX 10s ease-in-out infinite; }
 .animate-float-reverse { animation: floatY 9s ease-in-out infinite reverse; }
 .animate-blob { animation: blobMorph 20s ease-in-out infinite; }
 .fade-in-up { animation: fadeUp 650ms ease-out both; }
+.animate-gradient { background-size: 200% 200%; animation: gradientShift 8s ease infinite; }
+.twinkle { position: absolute; border-radius: 9999px; background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,255,255,0)); animation: twinkle 3.5s ease-in-out infinite; filter: blur(0.2px); }
 
 .glow-ring {
   box-shadow: 0 10px 30px rgba(79, 70, 229, 0.25), 0 6px 16px rgba(14, 165, 233, 0.18);

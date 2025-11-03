@@ -18,6 +18,22 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists');
   }
 
+  // Basic domain + role validation specific to NITC
+  const emailLower = String(email || '').toLowerCase();
+  const domainOk = emailLower.endsWith('@nitc.ac.in');
+  if (!domainOk) {
+    res.status(400);
+    throw new Error('Registration is restricted to @nitc.ac.in emails.');
+  }
+
+  // Identify student-pattern emails: e.g., name_b12345..., name_m12345...
+  const localPart = emailLower.split('@')[0];
+  const looksStudent = /[._-][bm]\d/.test(localPart);
+  if (looksStudent && role !== 'student') {
+    res.status(400);
+    throw new Error('This appears to be a student email. You cannot register as faculty or admin.');
+  }
+
   // Pass the plain-text password to the model; the pre-save hook will hash it
   const user = await User.create({ name, email, password, role });
 
