@@ -74,7 +74,7 @@ const CategoryManagement = () => {
 
     return (
         <div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Category Management (F4)</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Category Management</h3>
             
             {/* --- Create New Category Form --- */}
             <form onSubmit={handleCreateCategory} className="mb-6 p-4 border rounded-lg space-y-3 bg-gray-50">
@@ -90,13 +90,13 @@ const CategoryManagement = () => {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Assign Override FA (Optional)</label>
+                    <label className="block text-sm font-medium text-gray-700">Assign Faculty</label>
                     <select
                         value={newFaId}
                         onChange={(e) => setNewFaId(e.target.value)}
                         className="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 rounded-md"
                     >
-                        <option value="">None (Use Student's Primary FA)</option>
+                        <option value="">None</option>
                         {fas.map(fa => (
                             <option key={fa._id} value={fa._id}>{fa.name}</option>
                         ))}
