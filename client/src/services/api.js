@@ -24,6 +24,9 @@ export const createRequest = (requestData) => API.post('/requests', requestData,
   headers: { 'Content-Type': 'multipart/form-data' },
 });
 export const getMyRequests = () => API.get('/requests/myrequests');
+export const resubmitRequest = (id, requestData) => API.put(`/requests/${id}/resubmit`, requestData, {
+  headers: { 'Content-Type': 'multipart/form-data' },
+});
 
 // === FA Routes (F6, F7) ===
 export const getRequestsForFA = () => API.get('/fa/requests');

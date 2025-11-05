@@ -31,11 +31,30 @@ const createRequest = asyncHandler(async (req, res) => {
     throw new Error('This request cannot be submitted. No Faculty Advisor is assigned. Please contact an admin.');
   }
 
+  // Enforce per-category cap of 10 points per student (includes pending + finalized, excludes rejected)
+  const requestedPoints = Number(points);
+  if (Number.isNaN(requestedPoints) || requestedPoints <= 0) {
+    res.status(400);
+    throw new Error('Points must be a positive number.');
+  }
+
+  const existing = await Request.aggregate([
+    { $match: { studentId: student._id, category, status: { $nin: ['Rejected'] } } },
+    { $group: { _id: null, total: { $sum: '$points' } } },
+  ]);
+  const alreadyClaimed = existing[0]?.total || 0;
+  const cap = 10;
+  if (alreadyClaimed + requestedPoints > cap) {
+    const remaining = Math.max(cap - alreadyClaimed, 0);
+    res.status(400);
+    throw new Error(`You can claim at most ${cap} points in "${category}". Remaining: ${remaining}.`);
+  }
+
   const request = await Request.create({
     studentId: req.user.id,
     title,
     category,
-    points: Number(points), // --- FIX: Ensure points are saved as a Number
+    points: requestedPoints, // Ensure points are a Number
     proof: req.file.path,
     assignedFAId: assignedFAId,
     status: 'Submitted',
@@ -163,11 +182,23 @@ const finalizeAdminApproval = asyncHandler(async (req, res) => {
             p => p.category === request.category
         );
 
+        // Enforce cap=10 at finalization time too
+        const cap = 10;
+        const current = categoryIndex > -1 ? Number(student.pointsData[categoryIndex].points || 0) : 0;
+        const addition = Number(request.points) || 0;
+        if (current >= cap) {
+          res.status(400);
+          throw new Error(`Category "${request.category}" already has the maximum ${cap} points.`);
+        }
+        if (current + addition > cap) {
+          res.status(400);
+          throw new Error(`Finalizing this request would exceed the ${cap}-point limit for "${request.category}". Current: ${current}, Request: ${addition}.`);
+        }
+
         if (categoryIndex > -1) {
-             // --- FIX: Ensure points are added as a Number
-            student.pointsData[categoryIndex].points += Number(request.points);
+          student.pointsData[categoryIndex].points = current + addition;
         } else {
-            student.pointsData.push({ category: request.category, points: Number(request.points) });
+          student.pointsData.push({ category: request.category, points: addition });
         }
         await student.save();
     }
@@ -177,6 +208,61 @@ const finalizeAdminApproval = asyncHandler(async (req, res) => {
   res.json(updatedRequest);
 });
 
+// @desc    Student resubmits with new proof after 'More Info Required'
+// @route   PUT /api/requests/:id/resubmit
+// @access  Private (student)
+const resubmitRequest = asyncHandler(async (req, res) => {
+  const request = await Request.findById(req.params.id);
+  if (!request) {
+    res.status(404);
+    throw new Error('Request not found');
+  }
+  if (request.studentId.toString() !== req.user.id.toString()) {
+    res.status(401);
+    throw new Error('Not authorized to update this request');
+  }
+  if (request.status !== 'More Info Required') {
+    res.status(400);
+    throw new Error('Only requests marked "More Info Required" can be resubmitted.');
+  }
+
+  if (!req.file) {
+    res.status(400);
+    throw new Error('Please re-upload the proof file to resubmit.');
+  }
+
+  const newPoints = req.body.points !== undefined ? Number(req.body.points) : Number(request.points);
+  if (Number.isNaN(newPoints) || newPoints <= 0) {
+    res.status(400);
+    throw new Error('Points must be a positive number.');
+  }
+
+  const existing = await Request.aggregate([
+    { $match: { studentId: request.studentId, category: request.category, status: { $nin: ['Rejected'] }, _id: { $ne: request._id } } },
+    { $group: { _id: null, total: { $sum: '$points' } } },
+  ]);
+  const alreadyClaimed = existing[0]?.total || 0;
+  const cap = 10;
+  if (alreadyClaimed + newPoints > cap) {
+    const remaining = Math.max(cap - alreadyClaimed, 0);
+    res.status(400);
+    throw new Error(`You can claim at most ${cap} points in "${request.category}". Remaining: ${remaining}.`);
+  }
+
+  request.points = newPoints;
+  request.proof = req.file.path;
+  request.status = 'Submitted';
+  request.comments.push({
+    user: req.user.id,
+    userName: req.user.name,
+    role: 'student',
+    text: 'Student resubmitted with new proof',
+  });
+
+  const updated = await request.save();
+  res.json(updated);
+});
+
 
 module.exports = {
   createRequest,
@@ -184,5 +270,6 @@ module.exports = {
   getRequestsForFA,
   updateFAStatus,
   bulkApproveRequests,
-  finalizeAdminApproval
+  finalizeAdminApproval,
+  resubmitRequest,
 };
