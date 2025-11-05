@@ -1,5 +1,4 @@
 const User = require('../models/userModel');
-// These lines are now corrected to properly import the packages
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 

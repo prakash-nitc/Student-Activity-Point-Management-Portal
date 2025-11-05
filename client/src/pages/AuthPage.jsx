@@ -20,7 +20,6 @@ const AuthPage = () => {
     }
   };
 
-  // simple parallax for hero visuals
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const handleMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
