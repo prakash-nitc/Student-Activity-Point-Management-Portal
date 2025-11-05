@@ -1,4 +1,4 @@
-// import { useEffect, useState } from 'react';
+﻿// import { useEffect, useState } from 'react';
 // import { getMyRequests, getUserProfile } from '../../services/api';
 // import RequestForm from './RequestForm';
 
@@ -112,7 +112,7 @@
 
 // export default StudentDashboard;
 import React, { useState, useEffect } from 'react';
-import { getMyRequests, getUserProfile } from '../../services/api';
+import { getMyRequests, getUserProfile, resubmitRequest } from '../../services/api';
 import RequestForm from './RequestForm';
 
 const StudentDashboard = () => {
@@ -230,6 +230,7 @@ const StudentDashboard = () => {
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Points</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Comments / Reason</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
@@ -250,6 +251,13 @@ const StudentDashboard = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 italic">
                     {req.comments.length > 0 ? req.comments[req.comments.length - 1].text : '---'}
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {req.status === 'More Info Required' ? (
+                      <ResubmitInline request={req} onDone={fetchData} />
+                    ) : (
+                      <span className="text-gray-400">—</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -260,4 +268,39 @@ const StudentDashboard = () => {
   );
 };
 
+const ResubmitInline = ({ request, onDone }) => {
+  const [file, setFile] = useState(null);
+  const [points, setPoints] = useState(request.points || 0);
+  const [submitting, setSubmitting] = useState(false);
+  const [msg, setMsg] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!file) { setMsg('Please select a new proof file.'); return; }
+    const fd = new FormData();
+    fd.append('points', String(points));
+    fd.append('proof', file);
+    try {
+      setSubmitting(true);
+      await resubmitRequest(request._id, fd);
+      setMsg('Resubmitted for approval.');
+      onDone();
+    } catch (err) {
+      setMsg(err.response?.data?.message || 'Resubmission failed.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex items-center gap-2">
+      <input type="number" min={1} value={points} onChange={(e)=>setPoints(Number(e.target.value))} className="w-20 px-2 py-1 border rounded" />
+      <input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={(e)=>setFile(e.target.files?.[0]||null)} className="text-xs" />
+      <button type="submit" disabled={submitting} className={`px-3 py-1.5 rounded text-white text-xs ${submitting? 'bg-indigo-400':'bg-indigo-600 hover:bg-indigo-700'}`}>Resubmit</button>
+      {msg && <span className="text-xs text-gray-500">{msg}</span>}
+    </form>
+  );
+};
+
 export default StudentDashboard;
+

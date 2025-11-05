@@ -39,10 +39,18 @@ const Login = () => {
       {/* Background aurora and blobs */}
       <div className="aurora-bg opacity-70" />
 
+      {/* Logo placeholder top-left */}
+      <div className="pointer-events-none absolute left-4 top-4 z-30 hidden sm:flex items-center space-x-2">
+        <div className="logo-badge flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-white font-bold">N</div>
+        <span className="text-white/90 font-semibold tracking-wide">NITC</span>
+      </div>
+
       {/* Left: Hero with animated orbits */}
-      <div className="relative hidden lg:flex items-center justify-center overflow-hidden"
-           onMouseMove={handleMove}
-           onMouseLeave={() => setTilt({ x: 0, y: 0 })}>
+      <div
+        className="relative hidden lg:flex items-center justify-center overflow-hidden"
+        onMouseMove={handleMove}
+        onMouseLeave={() => setTilt({ x: 0, y: 0 })}
+      >
         {/* Soft color blobs */}
         <div className="absolute -top-28 -left-20 h-72 w-72 bg-indigo-500/20 blur-3xl animate-blob" />
         <div className="absolute top-1/2 -translate-y-1/2 -right-20 h-80 w-80 bg-sky-400/20 blur-3xl animate-blob" />
@@ -54,59 +62,80 @@ const Login = () => {
               Management Portal
             </span>
           </h1>
-          <p className="mt-5 text-indigo-100/90 text-lg fade-in-up" style={{animationDelay:'120ms'}}>
+          <p className="mt-5 text-indigo-100/90 text-lg fade-in-up" style={{ animationDelay: '120ms' }}>
             Turning participation into progress. Submit activities, track approvals,
             and grow your portfolio.
           </p>
 
-          <ul className="mt-6 grid grid-cols-2 gap-3 text-sm text-indigo-100/90 fade-in-up" style={{animationDelay:'180ms'}}>
-            <li className="flex items-center space-x-2"><span className="h-2 w-2 rounded-full bg-indigo-300"/> <span>Fast approvals</span></li>
-            <li className="flex items-center space-x-2"><span className="h-2 w-2 rounded-full bg-fuchsia-300"/> <span>Secure uploads</span></li>
-            <li className="flex items-center space-x-2"><span className="h-2 w-2 rounded-full bg-sky-300"/> <span>Live totals</span></li>
-            <li className="flex items-center space-x-2"><span className="h-2 w-2 rounded-full bg-emerald-300"/> <span>Mobile friendly</span></li>
+          {/* Feature bullets with icons */}
+          <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-indigo-100/90 fade-in-up" style={{ animationDelay: '180ms' }}>
+            <li className="flex items-center space-x-3">
+              <svg className="h-5 w-5 text-indigo-300" viewBox="0 0 24 24" fill="currentColor"><path d="M4 7a3 3 0 013-3h2a3 3 0 013 3v10H7a3 3 0 01-3-3V7zm8 0a3 3 0 013-3h2a3 3 0 013 3v3a3 3 0 01-3 3h-5V7z"/></svg>
+              <span>Students collaborating — Submit activities</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <svg className="h-5 w-5 text-fuchsia-300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.5L12 14.8 7.2 17l.9-5.5L4.2 7.7l5.4-.8L12 2z"/></svg>
+              <span>Trophy & certificates — Track approvals</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <svg className="h-5 w-5 text-emerald-300" viewBox="0 0 24 24" fill="currentColor"><path d="M5 19h14v2H5v-2zm2-4l3-3 2 2 5-5 1.5 1.5L12 17l-2-2-3 3z"/></svg>
+              <span>Grow your portfolio — Insights & totals</span>
+            </li>
           </ul>
 
-          {/* Animated orbit visuals */}
+          {/* Animated orbit visuals (circles pulled closer) */}
           <div className="mt-10 relative h-72 w-full">
-            <div className="absolute left-1/2 top-1/2 rounded-full bg-gradient-to-br from-indigo-400 to-fuchsia-400 glow-ring animate-float-slow"
-                 style={{
-                   height: '14rem', width: '14rem',
-                   transform: `translate(-50%, -50%) translateX(${tilt.x * 14}px) translateY(${tilt.y * 14}px)`
-                 }} />
-            <div className="absolute left-6 top-3 rounded-full bg-white/10 border border-white/30 backdrop-blur glow-ring animate-float-reverse"
-                 style={{ height: '6rem', width: '6rem', transform: `translateX(${tilt.x * -8}px) translateY(${tilt.y * -8}px)` }} />
-            <div className="absolute right-10 bottom-6 rounded-full bg-white/10 border border-white/30 backdrop-blur glow-ring animate-float-x"
-                 style={{ height: '7rem', width: '7rem', transform: `translateX(${tilt.x * 10}px) translateY(${tilt.y * 10}px)` }} />
+            {/* Main circle */}
+            <div
+              className="absolute left-1/2 top-1/2 rounded-full bg-gradient-to-br from-indigo-400 to-fuchsia-400 glow-ring animate-float-slow"
+              style={{ height: '14rem', width: '14rem', transform: `translate(-50%, -50%) translateX(${tilt.x * 14}px) translateY(${tilt.y * 14}px)` }}
+            />
+            {/* Two satellites much closer to center */}
+            <div
+              className="absolute left-1/2 top-1/2 rounded-full bg-white/10 border border-white/30 backdrop-blur glow-ring animate-float-reverse"
+              style={{ height: '6.2rem', width: '6.2rem', transform: `translate(calc(-50% - 120px), calc(-50% - 90px)) translateX(${tilt.x * -6}px) translateY(${tilt.y * -6}px)` }}
+            />
+            <div
+              className="absolute left-1/2 top-1/2 rounded-full bg-white/10 border border-white/30 backdrop-blur glow-ring animate-float-x"
+              style={{ height: '7rem', width: '7rem', transform: `translate(calc(-50% + 130px), calc(-50% + 85px)) translateX(${tilt.x * 6}px) translateY(${tilt.y * 6}px)` }}
+            />
 
             {/* twinkle particles */}
             <span className="twinkle" style={{ top: '10%', left: '12%', width: 3, height: 3, animationDelay: '0.4s' }} />
             <span className="twinkle" style={{ top: '18%', right: '15%', width: 4, height: 4, animationDelay: '1.2s' }} />
             <span className="twinkle" style={{ bottom: '14%', left: '22%', width: 3, height: 3, animationDelay: '2.0s' }} />
           </div>
+
+          {/* Doodle lines */}
+          <svg className="pointer-events-none absolute inset-0" viewBox="0 0 700 300" fill="none">
+            <path className="doodle-line doodle-wiggle" d="M20 80 C 120 20, 220 140, 320 80 S 520 60, 680 120" />
+            <path className="doodle-line" d="M60 200 C 180 180, 260 260, 420 220 S 600 220, 660 260" />
+          </svg>
         </div>
       </div>
 
       {/* Right: Auth Card */}
       <div className="flex items-center justify-center p-6 sm:p-10">
         <div className="w-full max-w-md">
-          <div className="bg-white/90 backdrop-blur rounded-2xl shadow-xl border border-white/60 p-8 fade-in-up">
+          {/* Glassmorphism login card */}
+          <div className="bg-white/15 text-white backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8 fade-in-up">
             <div className="mb-6 text-center">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md animate-float-x">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM7 9h10v2H7V9zm0 4h7v2H7v-2z"/></svg>
               </div>
-              <h2 className="mt-3 text-2xl font-bold text-gray-900">Welcome Back</h2>
-              <p className="text-sm text-gray-500">Sign in to continue</p>
+              <h2 className="mt-3 text-2xl font-bold">Welcome Back</h2>
+              <p className="text-sm text-white/80">Sign in to continue</p>
             </div>
 
             {error && (
-              <div className="mb-4 rounded-lg bg-rose-50 text-rose-700 text-sm px-3 py-2 border border-rose-200">
+              <div className="mb-4 rounded-lg bg-rose-500/15 text-rose-200 text-sm px-3 py-2 border border-rose-400/30">
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                <label htmlFor="email" className="block text-sm font-medium text-white/90">Email</label>
                 <input
                   id="email"
                   type="email"
@@ -114,12 +143,12 @@ const Login = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-lg border border-white/30 bg-white/90 px-3 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                   placeholder="you@college.edu"
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                <label htmlFor="password" className="block text-sm font-medium text-white/90">Password</label>
                 <div className="relative mt-1">
                   <input
                     id="password"
@@ -128,7 +157,7 @@ const Login = () => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 pr-10 text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="block w-full rounded-lg border border-white/30 bg-white/90 px-3 py-2 pr-10 text-gray-900 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     placeholder="••••••••"
                   />
                   <button
@@ -149,19 +178,19 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full inline-flex justify-center items-center rounded-lg px-4 py-2.5 text-white font-semibold shadow-sm transition-colors ${loading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                className={`btn-glow w-full inline-flex justify-center items-center rounded-lg px-4 py-2.5 text-white font-semibold shadow-sm transition ${loading ? 'bg-indigo-400' : 'bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 hover:from-indigo-500 hover:to-fuchsia-500'} focus:outline-none focus:ring-2 focus:ring-fuchsia-400/40`}
               >
                 {loading ? 'Signing in…' : 'Sign In'}
               </button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-gray-600">
+            <div className="mt-6 text-center text-sm text-white/80">
               <span>Don’t have an account? </span>
-              <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-700">Create one</Link>
+              <Link to="/register" className="font-semibold text-indigo-200 hover:text-white">Create one</Link>
             </div>
           </div>
 
-          <p className="mt-6 text-center text-xs text-gray-300">
+          <p className="mt-6 text-center text-xs text-white/60">
             By signing in you agree to the college’s acceptable use policy.
           </p>
         </div>
@@ -171,3 +200,4 @@ const Login = () => {
 };
 
 export default Login;
+

@@ -3,7 +3,8 @@ const router = express.Router();
 const {
   createRequest,
   getMyRequests,
-  finalizeAdminApproval
+  finalizeAdminApproval,
+  resubmitRequest,
 } = require('../controllers/requestController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
@@ -11,6 +12,7 @@ const upload = require('../middleware/uploadMiddleware');
 // Student routes
 router.route('/').post(protect, authorize('student'), upload.single('proof'), createRequest);
 router.route('/myrequests').get(protect, authorize('student'), getMyRequests);
+router.route('/:id/resubmit').put(protect, authorize('student'), upload.single('proof'), resubmitRequest);
 
 // Admin final approval route (F11)
 router.route('/:id/status').put(protect, authorize('admin'), finalizeAdminApproval);
