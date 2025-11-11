@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { getRequestsForFA, updateFAStatus, bulkApproveRequests } from '../../services/api';
+import { useEffect, useMemo, useState } from 'react';
+import { bulkApproveRequests, getRequestsForFA, updateFAStatus } from '../../services/api';
 
 const FADashboard = () => {
   const [requests, setRequests] = useState([]);
@@ -45,7 +45,7 @@ const FADashboard = () => {
       <div className="relative overflow-hidden rounded-2xl p-6 bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 text-white shadow-md">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-extrabold tracking-tight">Faculty Advisor Dashboard</h2>
+            <h2 className="text-2xl font-extrabold tracking-tight">Faculty Dashboard</h2>
             <p className="opacity-90">Review, request info, or approve student activities.</p>
           </div>
           <button

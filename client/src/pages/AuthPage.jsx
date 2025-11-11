@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../services/api';
 
 const AuthPage = () => {
@@ -31,7 +31,7 @@ const AuthPage = () => {
   return (
     <div className="relative min-h-screen grid lg:grid-cols-2 bg-gradient-to-br from-[#0d1b2a] via-[#102a43] to-[#1b3a57]">
       {/* Background aurora */}
-      <div className="aurora-bg opacity-70" />
+      <div className="aurora-bg opacity-70"/>
 
       {/* NIT Calicut logo top-left */}
       <div className="absolute left-4 top-4 z-30 hidden sm:flex items-center space-x-3">

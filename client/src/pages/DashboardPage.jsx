@@ -36,7 +36,15 @@ const DashboardPage = () => {
             <h1 className="text-2xl font-bold text-gray-900">
               Welcome, {userInfo?.name}
             </h1>
-            <p className="text-sm text-gray-500 capitalize">{userInfo?.role} Dashboard</p>
+            {/* Show a human-friendly role label instead of raw role key */}
+            <p className="text-sm text-gray-500 capitalize">{(function(){
+              const r = userInfo?.role;
+              if(!r) return 'Dashboard';
+              if(r === 'fa') return 'Faculty Dashboard';
+              if(r === 'student') return 'Student Dashboard';
+              if(r === 'admin') return 'Admin Dashboard';
+              return `${r} Dashboard`;
+            })()}</p>
           </div>
           <button
             onClick={handleLogout}
